@@ -1,2 +1,2 @@
-def something():
-    print("some hello asdaasassasdsdd")
+def something():s
+    print("some hello asdaaassaasasssasdsdd")
