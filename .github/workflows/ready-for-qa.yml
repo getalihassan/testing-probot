@@ -27,4 +27,4 @@ jobs:
           gh issue edit "${{ steps.links.outputs.issues }}" --remove-assignee "@me"
           gh issue reopen "${{ steps.links.outputs.issues }}"
           gh issue edit "${{ steps.links.outputs.issues }}" --add-label "testingLabel"
-          gh issue edit "${{ steps.links.outputs.issues }}" --add-assignee umairwaheed
+          gh issue edit "${{ steps.links.outputs.issues }}" --add-assignee getalihassan
