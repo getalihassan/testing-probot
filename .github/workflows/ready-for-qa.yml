@@ -21,7 +21,7 @@ jobs:
         run: echo "${{ steps.links.outputs.issues }}"
       - uses: actions/checkout@v3
       - env:
-          GITHUB_TOKEN: ${{ secrets.MGITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           -name: Upon Merge Approval Reasign to QA with Label
         run: |
           gh issue edit "${{ steps.links.outputs.issues }}" --remove-assignee "@me"
