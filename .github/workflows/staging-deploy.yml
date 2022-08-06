@@ -1,9 +1,8 @@
 name: deploy-to-staging
 on:
-  push:
-    branches:
-      # When someone push to `master` branch
-      - master
+  pull_request:
+    types:
+      - closed
 
 jobs:
   pre-commit_and_test:
