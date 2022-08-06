@@ -1,8 +1,9 @@
 name: deploy-to-staging
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches:
+      # When someone push to `master` branch
+      - master
 
 jobs:
   pre-commit_and_test:
@@ -16,6 +17,3 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-  ready-for-qa:
-    needs: deploy
-    uses: ./.github/workflows/ready-for-qa.yml
