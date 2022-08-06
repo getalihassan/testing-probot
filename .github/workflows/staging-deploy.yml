@@ -1,0 +1,20 @@
+name: deploy-to-staging
+on:
+  push:
+    branches:
+      # When someone push to `master` branch
+      - master
+
+jobs:
+  pre-commit_and_test:
+    runs-on: self-hosted
+    steps:
+      - uses: ./.github/workflows/ci.yml
+  deploy:
+    needs: pre-commit_and_test
+    name: "Deploy to staging"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Dump GitHub context
+        run: echo "Deployed to staging"

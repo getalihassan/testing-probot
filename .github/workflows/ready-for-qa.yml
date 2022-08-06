@@ -1,30 +1,35 @@
-# Once the PR is close, Add labels to the linked issue and assign to umairwaheed
-name: Ready For QA
+# If any PR is closed, find the related issue number, Add tags and assign to QA team
+name: ready-for-qa
 on:
- pull_request:
-    types:
-      - closed
+  workflow_run:
+    workflows: [deploy-to-staging]
+    types: [completed]
 
 jobs:
-  linked_issues:
+  add_qa_labels:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
-    name: Ready for QA
     steps:
-      - name: Find Linked Issues
-        id: links
-        uses: hossainemruz/linked-issues@main
-        with:
-          pr_url: ${{github.event.pull_request.html_url}}
-          format: IssueNumber
-
-      - name: Output linked Issue list
-        run: echo "${{ steps.links.outputs.issues }}"
-      - uses: actions/checkout@v3
-      - env:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: if_pr
+      if: github.event.pull_request
+      run: |
+        echo An pull request was closed
+        echo "${{github.event.pull_request.number}}"
+    - uses: actions/checkout@v3
+    - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           -name: Upon Merge Approval Reasign to QA with Label
-        run: |
-          gh issue edit "${{ steps.links.outputs.issues }}" --remove-assignee "@me"
-          gh issue reopen "${{ steps.links.outputs.issues }}"
-          gh issue edit "${{ steps.links.outputs.issues }}" --add-label "testingLabel"
-          gh issue edit "${{ steps.links.outputs.issues }}" --add-assignee getalihassan
+      run: |
+          gh pr view "${{github.event.pull_request.number}}" > tmp.log
+          TEMP=$(grep -hnr "#" tmp.log)
+          ISSUENO=${TEMP#*#}
+          printf -v ISSUENO '%s' $ISSUENO
+          gh issue reopen "$ISSUENO"
+          gh issue edit "$ISSUENO" --add-label "ready-for-qa"
+          gh issue edit "$ISSUENO" --add-label "staging"
+          gh issue edit "$ISSUENO" --remove-assignee ${{ github.actor }}
+          gh issue edit "$ISSUENO" --add-assignee getalihassan
