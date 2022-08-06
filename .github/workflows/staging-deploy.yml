@@ -7,9 +7,7 @@ on:
 
 jobs:
   pre-commit_and_test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/ci.yml
   deploy:
     needs: pre-commit_and_test
     name: "Deploy to staging"
