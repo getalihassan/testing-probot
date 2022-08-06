@@ -15,4 +15,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Dump GitHub context
-        run: echo "Deployed to staging"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
