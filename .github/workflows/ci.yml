@@ -11,4 +11,6 @@ jobs:
       - name: Dump GitHub as
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: |
+          echo "$GITHUB_CONTEXT"
+          echo "${{github.event.pull_request}}"
