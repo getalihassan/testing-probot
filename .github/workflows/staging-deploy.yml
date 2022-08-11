@@ -9,6 +9,8 @@ jobs:
   pre-commit_and_test:
     uses: ./.github/workflows/ci.yml
   deploy:
+    concurrency: 
+      group: ${{ github.head_ref || github.run_id }}
     needs: pre-commit_and_test
     name: "Deploy to staging"
     runs-on: ubuntu-latest
